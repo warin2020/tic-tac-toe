@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { InitialPiece } from "../../consts";
+import { InitialAiPiece, InitialPiece } from "../../consts";
 import { BoardType, GridType, PieceType } from "../../types";
 import {
+  getBoardAllEmpty,
   getFlipPiece,
   getGameState,
   getInitialBoard,
@@ -16,7 +17,7 @@ import styles from "./index.module.scss";
 const Game = () => {
   const [board, setBoard] = useState<BoardType>(getInitialBoard);
   const [piece, setPiece] = useState<PieceType>(InitialPiece);
-  const [aiPiece, setAiPiece] = useState<GridType>(GridType.Empty);
+  const [aiPiece, setAiPiece] = useState<GridType>(InitialAiPiece);
 
   const gameState = useMemo(
     () => getGameState(board, getFlipPiece(piece)),
@@ -34,7 +35,14 @@ const Game = () => {
     if (piece === aiPiece) {
       const {
         move: [rowIndex, colIndex],
-      } = getBestMoveScore(board, piece);
+      } = getBoardAllEmpty(board)
+        ? {
+            move: [
+              Math.floor(Math.random() * 3),
+              Math.floor(Math.random() * 3),
+            ],
+          }
+        : getBestMoveScore(board, piece);
       gridsRef.current?.[rowIndex][colIndex]?.handleClick();
     }
   }, [board, piece, aiPiece]);

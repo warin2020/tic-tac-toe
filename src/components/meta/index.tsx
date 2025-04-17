@@ -13,14 +13,7 @@ const Meta = ({ gameState, piece, onReset }: Props) => (
     {gameState === GameState.Going
       ? `${GridTypeTextMap[piece]}的回合`
       : GameStateTextMap[gameState]}
-    <button
-      style={{
-        visibility: gameState === GameState.Going ? "hidden" : "visible",
-      }}
-      onClick={onReset}
-    >
-      new game
-    </button>
+    <button onClick={onReset}>重新开始</button>
   </div>
 );
 

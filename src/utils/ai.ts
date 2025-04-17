@@ -1,15 +1,27 @@
-import { getFlipPiece, getGameState, getPieceWinGameState } from ".";
+import {
+  getBoardThreats,
+  getFlipPiece,
+  getGameState,
+  getPieceWinGameState,
+} from ".";
 import { BoardSize } from "../consts";
-import { BoardType, GameState, GridType, PieceType } from "../types";
+import {
+  BoardType,
+  GameState,
+  GridType,
+  PieceType,
+  PositionType,
+} from "../types";
 
 export const getBestMoveScore = (
   board: BoardType,
-  piece: PieceType
+  piece: PieceType,
+  depth = 0
 ): {
-  move: [number, number];
+  move: PositionType;
   score: number;
 } => {
-  let bestMove: [number, number] = [0, 0];
+  let bestMove: PositionType = [0, 0];
   let bestScore = -1;
 
   for (let i = 0; i < BoardSize; i++) {
@@ -25,7 +37,10 @@ export const getBestMoveScore = (
       } else if (gameState === getPieceWinGameState(piece)) {
         score = 1;
       } else if (gameState === GameState.Going) {
-        score = -getBestMoveScore(board, getFlipPiece(piece)).score;
+        score = -getBestMoveScore(board, getFlipPiece(piece), depth + 1).score;
+      }
+      if (getBoardThreats(board, piece) === 1) {
+        score -= depth === 0 ? 0.1 : 0.01;
       }
       if (score > bestScore) {
         bestMove = [i, j];

@@ -1,10 +1,13 @@
 import { GameState, GridType } from "../types";
+import { getBoardChecks } from "../utils";
 
 export const BoardSize = 3;
 
 export const InitialPiece = GridType.O;
 
-export const InitialAiPiece = GridType.Empty;
+export const InitialAiPiece = GridType.O;
+
+export const BoardChecks = getBoardChecks();
 
 export const GridTypeTextMap: Record<GridType, string> = {
   [GridType.Empty]: "",
