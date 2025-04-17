@@ -1,3 +1,4 @@
+import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { GridTypeTextMap } from "../../consts";
 import { GridType, PieceType } from "../../types";
 import styles from "./index.module.scss";
@@ -8,18 +9,33 @@ interface Props {
   piece: PieceType;
 }
 
-const Grid = ({ grid, onGridChange, piece }: Props) => (
-  <div
-    className={styles.grid}
-    onClick={() => {
+export interface GridRef {
+  handleClick: () => void;
+}
+
+const Grid = forwardRef<GridRef, Props>(
+  ({ grid, onGridChange, piece }, ref) => {
+    const handleClick = useCallback(() => {
       if (grid !== GridType.Empty) {
         return;
       }
       onGridChange(piece);
-    }}
-  >
-    {GridTypeTextMap[grid]}
-  </div>
+    }, [grid, onGridChange, piece]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        handleClick,
+      }),
+      [handleClick]
+    );
+
+    return (
+      <div className={styles.grid} onClick={handleClick}>
+        {GridTypeTextMap[grid]}
+      </div>
+    );
+  }
 );
 
 export default Grid;

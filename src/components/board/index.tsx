@@ -1,7 +1,8 @@
+import { RefObject } from "react";
 import { BoardSize } from "../../consts";
 import { BoardType, GameState, PieceType } from "../../types";
 import { getFlipPiece } from "../../utils";
-import Grid from "../grid";
+import Grid, { GridRef } from "../grid";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
   piece: PieceType;
   onPieceChange: (piece: PieceType) => void;
   gameState: GameState;
+  gridsRef: RefObject<(GridRef | undefined)[][]>;
 }
 
 const Board = ({
@@ -18,6 +20,7 @@ const Board = ({
   piece,
   onPieceChange,
   gameState,
+  gridsRef,
 }: Props) => (
   <div
     className={styles.board}
@@ -29,6 +32,11 @@ const Board = ({
     {board.map((row, rowIndex) =>
       row.map((grid, colIndex) => (
         <Grid
+          ref={(el) => {
+            if (gridsRef.current) {
+              gridsRef.current[rowIndex][colIndex] = el ?? undefined;
+            }
+          }}
           key={`${rowIndex}-${colIndex}`}
           grid={grid}
           onGridChange={(_grid) => {

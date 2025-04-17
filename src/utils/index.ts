@@ -1,3 +1,4 @@
+import { GridRef } from "../components/grid";
 import { BoardSize } from "../consts";
 import { BoardType, GameState, GridType, PieceType } from "../types";
 
@@ -5,6 +6,11 @@ export const getInitialBoard = (): BoardType =>
   Array(BoardSize)
     .fill(0)
     .map(() => Array(BoardSize).fill(GridType.Empty));
+
+export const getInitialGridsRef = (): (GridRef | undefined)[][] =>
+  Array(BoardSize)
+    .fill(0)
+    .map(() => Array(BoardSize).fill(undefined));
 
 export const getFlipPiece = (piece: PieceType) =>
   piece === GridType.O ? GridType.X : GridType.O;
